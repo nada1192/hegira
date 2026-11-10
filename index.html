@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>كل سنة وإنتي طيبة يا هجوره 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;800&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#ffe6f0;--bg2:#ffd0e3;--hot:#ff5fa2;--rose:#ffb3d0;--berry:#6b1f45;--white:#fff}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--berry);font-family:'Cairo',sans-serif;line-height:1.9;font-size:18px;overflow-x:hidden}
+h1,h2,h3{font-family:'Baloo Bhaijaan 2','Cairo',sans-serif;font-weight:800;line-height:1.3}
+section{padding:64px 20px;max-width:980px;margin:auto}
+h2{font-size:clamp(28px,5vw,40px);color:var(--hot);margin-bottom:6px;text-align:center}
+.sub{text-align:center;opacity:.8;margin-bottom:34px}
+
+#hearts{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+#hearts span{position:absolute;bottom:-40px;animation:up linear infinite;opacity:.55}
+@keyframes up{to{transform:translateY(-110vh) rotate(25deg)}}
+main,header,footer{position:relative;z-index:1}
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+#hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;background:radial-gradient(circle at 15% 15%,#fff 0,transparent 40%),radial-gradient(circle at 85% 85%,var(--bg2) 0,transparent 50%)}
+.big-heart{font-size:clamp(90px,24vw,190px);line-height:1;animation:beat 1.4s ease-in-out infinite;filter:drop-shadow(0 10px 0 rgba(255,95,162,.25))}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+#hero h1{font-size:clamp(30px,7vw,56px);color:var(--hot);margin-top:6px}
+#hero .ten{display:inline-block;background:var(--hot);color:var(--white);border-radius:999px;padding:0 22px;margin:10px 0}
+#hero p{max-width:480px;margin:6px auto 26px}
+button.big{font:800 20px 'Baloo Bhaijaan 2',sans-serif;background:var(--hot);color:var(--white);border:0;border-radius:999px;padding:14px 36px;cursor:pointer;box-shadow:0 6px 0 #d63d85;transition:transform .1s,box-shadow .1s}
+button.big:active{transform:translateY(5px);box-shadow:0 1px 0 #d63d85}
+button.big:focus-visible{outline:3px solid var(--berry);outline-offset:3px}
+
+#reveal{display:none}
+#reveal.on{display:block}
+
+.photo{background:var(--white);padding:10px;border-radius:22px;box-shadow:0 10px 24px rgba(255,95,162,.3);border:3px solid var(--rose);position:relative;transform:rotate(var(--r,-2deg))}
+.photo::after{content:"💗";position:absolute;top:-16px;left:-12px;font-size:30px}
+.empty-photo{width:100%;aspect-ratio:4/5;border:2px dashed var(--rose);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--hot);background:#fff8fb}
+.photo figcaption{text-align:center;font-family:'Baloo Bhaijaan 2';margin-top:6px}
+
+.chapter{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;margin-bottom:56px}
+.chapter:nth-child(even) .text{order:2}
+.when{display:inline-block;background:var(--rose);border-radius:999px;padding:0 16px;font-weight:600;margin-bottom:6px}
+.chapter h3{font-size:26px;color:var(--hot)}
+.chapter .photo:nth-child(odd){--r:2deg}
+
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:30px}
+.wall .photo:nth-child(3n+1){--r:-3deg}
+.wall .photo:nth-child(3n+2){--r:2.5deg}
+.wall .photo:nth-child(3n){--r:-1deg}
+
+.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.vid{background:var(--white);border:3px solid var(--rose);border-radius:24px;padding:12px;box-shadow:0 10px 24px rgba(255,95,162,.25)}
+.empty-video{width:100%;aspect-ratio:16/9;background:#fff8fb;border:2px dashed var(--rose);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--hot)}
+.vid p{text-align:center;font-weight:600;margin-top:6px}
+
+.facts{list-style:none;padding:0;display:grid;gap:14px}
+.facts li{background:var(--white);border-radius:999px;padding:12px 24px;border:3px dotted var(--rose)}
+
+.letter{background:var(--white);border-radius:30px;padding:36px 28px;border:3px solid var(--hot);box-shadow:0 12px 0 var(--rose);text-align:center}
+.letter p{margin-bottom:10px}
+.sig{font-family:'Baloo Bhaijaan 2';font-size:24px;color:var(--hot)}
+footer{text-align:center;padding:36px;opacity:.8}
+/* صور الحكاية */
+.chapter .photo{max-width:240px;margin-inline:auto}
+
+/* حيطة الصور */
+.wall{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:22px}
+
+/* أي صورة حقيقية تتحط جوه الإطار */
+.photo img{width:100%;height:auto;max-height:260px;object-fit:cover;border-radius:14px;display:block}
+
+/* مكان الصورة الفاضي */
+.empty-photo{aspect-ratio:1/1}
+.wall{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;gap:22px!important}
+.wall .photo{max-width:170px!important;margin-inline:auto!important}
+.empty-photo{aspect-ratio:1/1!important}
+.chapter .photo{max-width:240px!important;margin-inline:auto!important}
+@media(max-width:20px){
+.chapter{grid-template-columns:1fr}
+.chapter:nth-child(even) .text{order:0}
+}
+
+@media(prefers-reduced-motion:reduce){
+*{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+
+
+</style>
+
+</head>
+
+<body>
+}
+<div id="hearts" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<header id="hero">
+<div class="big-heart">💖</div>
+<h1>كل سنة وإنتي طيبة يا هجوره</h1>
+<div class="ten"><h3>10 سنين صحوبية 🎀</h3></div>
+<p>صاحب اولى إعدادي لحد رابعة جامعة،كل سنه وإنتي معايا يهجوره. فيه مفاجأة جواكي، دوسي على الزرار 👇</p>
+<button class="big" id="openBtn">افتحي المفاجأة 🎁</button>
+</header>
+<main id="reveal">
+<section>
+<h2></h2>
+<p> </p>عشر سنين فيهم ضحك وخناق وصياح ومصايبنا سوا </p>
+
+<div class="chapter">
+<div class="text">
+<span class="when"> بدايه اللعنه</span>
+<p>مسكنا بعض عجنا بعض وكنا بنضرب بعض بالعنب 😂</p>
+</div>
+<figure class="photo">
+<img src="friend.jpg.jpg" alt="صورتنا" class="photo">
+</figure>
+</div>
+
+<div class="chapter">
+<div class="text">
+<span class="when">الثانوي</span>
+<h3>ايام الدروس ومستر سمير</h3>
+<p>الدروس والامتحانات والمواقف اللي لسه بنضحك عليها لما المستر جابك من شعرك من وقت م كان اسمك محسن شاى</p>
+</div>
+<figure class="photo">
+<img src="friend1.jpg.jpg" alt="صورتنا" class="photo">
+</figure>
+</div>
+
+<div class="chapter">
+<div class="text">
+<span class="when">الجامعة</span>
+<h3>وكبرنا.. وبقينا رابعة جامعه كمان!</h3>
+<p>أربع سنين جامعة وإحنا لسه سوا ولسه مش طايقين بعض </p>
+</div>
+<figure class="photo">
+<img src="friend2.jpg.jpg" alt="صورتنا" class="photo">
+</figure>
+</div>
+</section>
+
+<section>
+<h2>حيطة الصور 📸</h2>
+<p class="sub">لقطات مش هتتنسي.</p>
+<div class="wall">
+<img src="friend3.jpg.jpg" alt=💖"صورتنا" class="photo">
+<img src="friend6.jpg.jpg" alt=💖"صورتنا" class="photo">
+<img src="friend5.jpg.jpg" alt="صورتنا" class="photo">
+<img src="friend4.jpg.jpg" alt="صورتنا" class="photo">
+</div>
+</section>
+
+<section>
+<h2>فيديوهات 🎬</h2>
+<p class="sub">دوسي بلاي واضحكي.</p>
+<div class="videos">
+<video controls width="250">
+    <source src="video.mp4.mp4" type="video/mp4">
+    
+</video>
+<video controls width="250">
+    <source src="video2.mp4.mp4" type="video/mp4">
+    
+</video>
+</div>
+</section>
+
+<section>
+<h2>حقايق عن هجوره 🍓</h2>
+<p class="sub">بالأدلة طبعًا.</p>
+<ul class="facts">
+<li>😂عاوزه تشتغل على تكتوك ام سيد</li>
+<li>😂 يسطااااا</li>
+<li>🙈 تخصص حوادث</li>
+<li>🤝 وأهم حقيقة: بعد كل الخناقات رجعنا لبعض.</li>
+</ul>
+</section>
+
+<section>
+<div class="letter">
+<h2>لهجوره 💌</h2>
+<p>كل سنه وانتى طيبه يهجوره وعقبال سنين كتيره وانتى دايما معانا والسنه الجايه الاقيكى جايبه التوكتوك</p>
+<p>كل سنة وإنتي طيبة يهكر 🎂💗</p>
+<p class="sig">ندوده ❤️</p>
+</div>
+</section>
+
+</main>
+
+<footer>اتعمل بحب لهجوره 💗</footer>
+
+<script>
+const hs=document.getElementById('hearts');
+const em=['💗','💖','🎀','🌸','💕'];
+
+for(let i=0;i<16;i++){
+const s=document.createElement('span');
+s.textContent=em[i%em.length];
+s.style.left=Math.random()*20+'%';
+s.style.fontSize=(16+Math.random()*12)+'px';
+s.style.animationDuration=(9+Math.random()*10)+'s';
+s.style.animationDelay=(-Math.random()*10)+'s';
+hs.appendChild(s);
+}
+
+const btn=document.getElementById('openBtn');
+const reveal=document.getElementById('reveal');
+
+btn.addEventListener('click',()=>{
+reveal.classList.add('on');
+btn.textContent='كل سنة وإنتي طيبة! 🎉';
+setTimeout(()=>reveal.scrollIntoView({behavior:'smooth'}),300);
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches) rain();
+});
+
+function rain(){
+const c=document.getElementById('confetti');
+const x=c.getContext('2d');
+c.width=innerWidth;
+c.height=innerHeight;
+const e=['💗','💖','🎀','🌸','🎉'];
+const p=Array.from({length:5},()=>({
+x:Math.random()*c.width,
+y:-10-Math.random()*c.height*.2,
+v:1+Math.random()*1,
+s:(Math.random()-.2)*1,
+z:18+Math.random()*10,
+e:e[Math.random()*5|0]
+}));
+let f=0;
+
+(function loop(){
+x.clearRect(0,0,c.width,c.height);
+p.forEach(q=>{
+q.y+=q.v;
+q.x+=q.s;
+x.font=q.z+'px serif';
+x.fillText(q.e,q.x,q.y);
+});
+if(++f<300)requestAnimationFrame(loop);
+else x.clearRect(0,0,c.width,c.height);
+})();
+}
+</script>
+
+</body>
+</html>
